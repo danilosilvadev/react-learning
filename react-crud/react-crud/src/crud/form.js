@@ -4,10 +4,7 @@ class Form extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            list: {
-                item: '',
-                id: ''
-            }
+            list: []
         };
         this.handleReplace = this.handleReplace.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
@@ -25,11 +22,7 @@ class Form extends Component {
         if (item === null || item === "" || item === undefined) {
             return alert('Preencha os campos');
         } else {
-            this.setState({ list : {id: 1, item: item}});
-            const newItem = this.state.list;
-            const list = [];
-            const newList = list.push(newItem);
-            this.loadList(newList);
+            this.setState({ list: [...this.state.list, { item: item, id: Math.random() }] });
         }
     }
 
@@ -46,10 +39,6 @@ class Form extends Component {
         } else {
             return itensList;
         }
-    }
-
-    componentWillMount() {
-        this.loadList();
     }
 
     handleReplace() {
@@ -71,7 +60,7 @@ class Form extends Component {
                 </label>
                 <input type="submit" value="Adicionar" />
             </form>
-                <ul>{list}</ul>
+                <ul>{this.loadList(list)}</ul>
             </div>
         )
     }
