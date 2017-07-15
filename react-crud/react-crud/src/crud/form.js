@@ -1,128 +1,80 @@
-import React from 'react';
-
 import React, { Component } from 'react'
-
-import Styled from 'styled-components'
-
-import ValidatingFields from '../utils/validating-fields'
-
-const Label = Styled.label`
-            display: -webkit-flex;
-            display: flex;
-            margin-top: 15px;
-            justify-content: center;
-            font-size: 200%;
-            color:  #f9a19f;
-            font-weight: bold;
-            display: block;
-
-`
-
-const Input = Styled.input`
-            border: none;
-            border-radius: 1px;
-            border-bottom: 1px solid #f9a19f;
-            outline: none;
-            font-size: 80%;
-            background: none;
-            width: 90%;
-            display: -webkit-flex;
-            display: flex;
-            justify-content: flex-start;
-`
-const Textarea = Styled.textarea`
-                border: none;
-                border-radius: 3px;
-                border-bottom: 2px solid  #f9a19f;
-                outline: none;
-                width: 90%;
-                font-size: 100%;
-                display: -webkit-flex;
-                display: flex;
-                justify-content: flex-start;
-`
-
-const Form = Styled.form`
-            align-items: center;
-            margin-top: 10%;
-`
-const Span = Styled.span`
-            display: -webkit-flex;
-            display: flex;
-            justify-content: flex-start;
-`
-
-const Button = Styled.input`
-            background: none;
-            border: 1px solid #f9a19f;
-            color: #f9a19f;
-            border-radius: 3px;
-            font-size: 200%;
-            display: -webkit-flex;
-            display: flex;
-            justify-content: flex-start;
-            outline: none;
-`
 
 class Form extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
-            email: '',
-            message: ''
+            list: {
+                item: '',
+                id: ''
+            }
         };
-
-        this.handleChangeName = this.handleChangeName.bind(this);
-        this.handleChangeEmail = this.handleChangeEmail.bind(this);
-        this.handleChangeMessage = this.handleChangeMessage.bind(this);
-
+        this.handleReplace = this.handleReplace.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
-    handleChangeName(event) {
-        this.setState({ name: event.target.value });
-    }
-
-    handleChangeEmail(event) {
-        this.setState({ email: event.target.value });
-    }
-
-    handleChangeMessage(event) {
-        this.setState({ message: event.target.value });
+    handleChange(event) {
+        this.setState({ item: event.target.value });
     }
 
     handleSubmit(event) {
         event.preventDefault();
-        if (ValidatingFields.isEmptyOrNull(this.state.name, this.state.email, this.state.message)) {
+        let item = this.state.item;
+        if (item === null || item === "" || item === undefined) {
             return alert('Preencha os campos');
         } else {
-            alert('Nome: ' + this.state.name);
-            alert('Email: ' + this.state.email);
-            alert('Message: ' + this.state.message);
+            this.setState({ list : {id: 1, item: item}});
+            const newItem = this.state.list;
+            const list = [];
+            const newList = list.push(newItem);
+            this.loadList(newList);
         }
     }
 
+    loadList(list) {
+        const itensList = list.map((list) => {
+            return <li key={list.id}>
+                <span>{list.id} - {list.item}</span><br />
+                <button onClick={this.handleReplace()}>Replace</button>
+                <button onClick={this.handleDelete()}>Delete</button>
+            </li>;
+        });
+        if (itensList === null || itensList === "" || itensList === undefined) {
+            return <li>empty</li>;
+        } else {
+            return itensList;
+        }
+    }
+
+    componentWillMount() {
+        this.loadList();
+    }
+
+    handleReplace() {
+
+    }
+
+    handleDelete() {
+
+    }
+
     render() {
+
+        const { list } = this.state;
         return (
-            <Form onSubmit={this.handleSubmit}>
-                <Label>
-                    <Span>Qual o seu nome?</Span>
-                    <Input type="text" onChange={this.handleChangeName} />
-                </Label><Label>
-                    <Span>Me diz um e-mail seu pra retorno:</Span>
-                    <Input type="text" onChange={this.handleChangeEmail} /></Label><Label>
-                    <Span>Escreva sua mensagem:</Span>
-                    <Textarea onChange={this.handleChangeMessage} />
-                </Label><br />
-                <Button type="submit" value="Enviar" />
-            </Form>
+            <div><form onSubmit={this.handleSubmit}>
+                <label>
+                    <span>Add item</span>
+                    <input type="text" onChange={this.handleChange} />
+                </label>
+                <input type="submit" value="Adicionar" />
+            </form>
+                <ul>{list}</ul>
+            </div>
         )
     }
 }
 
 export default Form
-
-<h3>{id} - {item}</h3>
-            <button onClick={handleReplace()}>Replace</button>
-            <button onClick={handleDelete()}>Delete</button>
