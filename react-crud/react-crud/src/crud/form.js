@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 
+let _counter = 1;
+
 class Form extends Component {
     constructor(props) {
         super(props);
@@ -12,6 +14,10 @@ class Form extends Component {
         this.handleSubmit = this.handleSubmit.bind(this);
     }
 
+    incrementCounter() {
+        return String(_counter++);
+    }
+
     handleChange(event) {
         this.setState({ item: event.target.value });
     }
@@ -22,7 +28,7 @@ class Form extends Component {
         if (item === null || item === "" || item === undefined) {
             return alert('Preencha os campos');
         } else {
-            this.setState({ list: [...this.state.list, { item: item, id: Math.random() }] });
+            this.setState({ list: [...this.state.list, { item: item, id: this.incrementCounter() }] });
         }
     }
 
@@ -30,8 +36,8 @@ class Form extends Component {
         const itensList = list.map((list) => {
             return <li key={list.id}>
                 <span>{list.id} - {list.item}</span><br />
-                <button onClick={this.handleReplace()}>Replace</button>
-                <button onClick={this.handleDelete()}>Delete</button>
+                <button onClick={() => this.handleReplace(list.id)}>Replace</button>
+                <button onClick={() => this.handleDelete(list.id)}>Delete</button>
             </li>;
         });
         if (itensList === null || itensList === "" || itensList === undefined) {
@@ -41,12 +47,17 @@ class Form extends Component {
         }
     }
 
-    handleReplace() {
-
+    handleReplace(id) {
+         console.log('replace ' + id);
+            
     }
 
-    handleDelete() {
-
+    handleDelete(id) {
+        console.log('delete ' + id);
+        this.setState(state => {
+            const filteredList = state.list.filter(item => item.id !== id);
+            return { list: filteredList };
+        });
     }
 
     render() {
