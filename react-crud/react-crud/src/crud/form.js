@@ -106,6 +106,7 @@ class Form extends Component {
         } else {
             let index = list.findIndex(x => x.id==idMirror);
             list.splice(index, list[index] = {id: idMirror, item: this.state.item})
+            this.setState({ showForm: true })
             console.log(index);
         }
     }
