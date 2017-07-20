@@ -1,11 +1,30 @@
 import React, { Component } from 'react'
 
-const List = () => {
-
+const List = props => {
+    const itensList = props.list.map((list) => {
+        return <li key={list.id}>
+            <span>{list.id} - {list.item}</span><br />
+            <button onClick={() => props.handleReplace(list.id)}>Replace</button>
+            <button onClick={() => props.handleDelete(list.id)}>Delete</button>
+        </li>;
+    });
+    if (itensList === null || itensList === "" || itensList === undefined) {
+        return <li>empty</li>;
+    } else {
+        return <ul>{itensList}</ul>;
+    }
 }
 
-const Update = () => {
-
+const Update = props => {
+    return <div>
+        <label>
+            <input type="text" onChange={props.handleChange} />
+        </label>
+        <label>
+            <input type="submit" value="Update" />
+        </label>
+        <button onClick={props.cancelUpdate}> Cancel </button>
+    </div>
 }
 
 class Form extends Component {
@@ -49,18 +68,7 @@ class Form extends Component {
     }
 
     loadList(list) {
-        const itensList = list.map((list) => {
-            return <li key={list.id}>
-                <span>{list.id} - {list.item}</span><br />
-                <button onClick={() => this.handleReplace(list.id)}>Replace</button>
-                <button onClick={() => this.handleDelete(list.id)}>Delete</button>
-            </li>;
-        });
-        if (itensList === null || itensList === "" || itensList === undefined) {
-            return <li>empty</li>;
-        } else {
-            return itensList;
-        }
+
     }
 
     handleReplace(id) {
@@ -85,15 +93,7 @@ class Form extends Component {
         if (this.state.showForm === false) {
             return <div></div>
         }
-        return <div>
-            <label>
-                <input type="text" onChange={this.handleChange} />
-            </label>
-            <label>
-                <input type="submit" value="Update" />
-            </label>
-            <button onClick={this.cancelUpdate}> Cancel </button>
-        </div>
+        return <Update handleChange={this.handleChange} cancelUpdate={this.cancelUpdate}/>;
     }
 
     handleUpdate(e) {
@@ -104,8 +104,8 @@ class Form extends Component {
         if (item === null || item === "" || item === undefined) {
             return alert('Writte something');
         } else {
-            let index = list.findIndex(x => x.id==idMirror);
-            list.splice(index, list[index] = {id: idMirror, item: this.state.item})
+            let index = list.findIndex(x => x.id === idMirror);
+            list.splice(index, list[index] = { id: idMirror, item: this.state.item })
             this.setState({ showForm: true })
             console.log(index);
         }
@@ -122,7 +122,7 @@ class Form extends Component {
                 </label>
                 <input type="submit" value="Add" />
             </form>
-                <ul>{this.loadList(list)}</ul>
+                <List list={list} handleReplace={this.handleReplace} handleDelete={this.handleDelete } />
                 <form onSubmit={this.handleUpdate}>{this.loadFields()}</form>
             </div>
         )
