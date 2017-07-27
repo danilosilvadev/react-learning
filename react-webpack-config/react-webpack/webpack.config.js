@@ -11,14 +11,14 @@ module.exports = {
   ],
 
   output: {
-    path: path.join(__dirname, '/dist/assets'),
+    path: path.join(__dirname, '/dist/assets/'),
     filename: '[name].bundle.js',
     publicPath: publicPath,
     sourceMapFilename: '[name].map'
   },
 
   devServer: {
-    port: 7777,
+    port: 8080,
     host: 'localhost',
     historyApiFallback: true,
     noInfo: false,
