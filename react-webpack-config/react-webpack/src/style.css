@@ -1,0 +1,12 @@
+ @font-face {
+   font-family: 'MyFont';
+   src:  url('./missbeautifulbold.otf') format('otf');
+   font-weight: 600;
+   font-style: normal;
+  }
+
+.hello {
+    color: green;
+    background: url('./icon.png');
+    font-family: 'MyFont';
+}
