@@ -1,39 +1,42 @@
-const { join }  = require('path')
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+var path = require('path');
+const webpack = require('webpack');
+const publicPath = '/dist/assets/';
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-const paths = {
-  src: join(__dirname, 'src'),
-  dist: join(__dirname, 'dist')
-}
 
 module.exports = {
   //Content 
-  entry: [
-    'react-hot-loader/patch',
-    'webpack-dev-server/client?http://localhost:3000',
-    'webpack/hot/only-dev-server',
-    join(paths.src, 'index')
-  ],
+  entry: './src/index.js',
   // A SourceMap without column-mappings ignoring loaded Source Maps. 
   devtool: 'cheap-module-source-map',
   plugins: [
     //simplifies creation of HTML files to serve your webpack bundles. This is especially useful for webpack bundles that include a hash in the filename which changes every compilation. You can either let the plugin generate an HTML file for you, supply your own template using lodash templates or use your own loader.
     new HtmlWebpackPlugin({
-      title: 'React redux webpack',
-      template: join(paths.src, 'index.html')
+      title: 'Hot Module Replacement'
     }),
     //Auto replacement of page when i save some file, even css
     new webpack.HotModuleReplacementPlugin()
   ],
 
   output: {
-    path: paths.dist,
+    path: path.join(__dirname, publicPath),
     filename: '[name].bundle.js',
-    publicPath: '/',
+    publicPath: publicPath,
     sourceMapFilename: '[name].map',
   },
 
+  devServer: {
+    port: 8080,
+    host: 'localhost',
+    //Be possible go back pressing the "back" button at chrome
+    historyApiFallback: true,
+    noInfo: false,
+    stats: 'minimal',
+    publicPath: publicPath,
+    contentBase: path.join(__dirname, '/dist/assets/'),
+    //hotmodulereplacementeplugin
+    hot: true
+  },
   module: {
     rules: [
       {
@@ -44,24 +47,10 @@ module.exports = {
         test: /\.(png|svg|jpg|gif)$/,
         use: ['file-loader']
       },
-      {
-        test: /\.js$/,
-        include: paths.src,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: [['env', { modules: false }], 'stage-0', 'react'],
-            plugins: [
-              'react-hot-loader/babel',
-              ['transform-runtime', {
-                helpers: false,
-                polyfill: false,
-                regenerator: true
-              }]
-            ]
-          }
-        }
-      }    
-    ]
+{
+            test: /\.js|.jsx?$/,
+            exclude: /(node_modules)/,
+            loaders: ["babel-loader"]
+        }    ]
   }
 }
